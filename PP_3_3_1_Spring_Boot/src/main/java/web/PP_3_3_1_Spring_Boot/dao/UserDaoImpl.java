@@ -6,7 +6,6 @@ import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 import web.PP_3_3_1_Spring_Boot.model.User;
 
-
 import java.util.List;
 
 @Repository
@@ -32,12 +31,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void updateUser(User user, Long id) {
-        User existingUser = entityManager.find(User.class, id);
-        existingUser.setName(user.getName() );
-        existingUser.setAge(user.getAge() );
-        existingUser.setEmail(user.getEmail() );
+        Query query = entityManager.createQuery("UPDATE User u SET u.name = :name, u.age = :age, u.email = :email WHERE u.id = :id");
 
-        entityManager.merge(existingUser);
+        query.setParameter("name", user.getName() );
+        query.setParameter("age", user.getAge() );
+        query.setParameter("email", user.getEmail() );
+        query.setParameter("id", id);
+
+        query.executeUpdate();
     }
 
     @Override
